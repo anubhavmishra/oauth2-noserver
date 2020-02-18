@@ -65,9 +65,11 @@ func AuthenticateUser(oauthConfig *oauth2.Config, options ...AuthenticateUserOpt
 	sslcli := &http.Client{Transport: tr}
 	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, sslcli)
 
-	// Redirect user to consent page to ask for permission
-	// for the scopes specified above.
-	oauthConfig.RedirectURL = fmt.Sprintf("http://%s:%s/oauth/callback", IP, strconv.Itoa(PORT))
+	if oauthConfig.RedirectURL == "" {
+		// Redirect user to consent page to ask for permission
+		// for the scopes specified above.
+		oauthConfig.RedirectURL = fmt.Sprintf("http://%s:%s/oauth/callback", IP, strconv.Itoa(PORT))
+	}
 
 	// Some random string, random for each request
 	oauthStateString := rndm.String(8)
